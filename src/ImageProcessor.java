@@ -34,12 +34,22 @@ public class ImageProcessor {
         // Encrypt or decrypt
         boolean encrypt = choice.equalsIgnoreCase("e");
 
-        String binaryData = "";
+        StringBuilder binaryData = new StringBuilder();
         // Binary data
         if (encrypt) {
             Scanner bitscan = new Scanner(System.in);
-            System.out.print("What do you want to encrypt?");
-            binaryData = bitscan.nextLine();
+            System.out.print("What do you want to encrypt(ASCII)?");
+            String unBinary = bitscan.nextLine();
+            // Binary Stuff
+            byte[] bytes = unBinary.getBytes();
+            for (byte b : bytes) {
+                int val = b;
+                for (int i = 0; i < 8; i++) {
+                    binaryData.append((val & 128) == 0 ? 0 : 1);
+                    val <<= 1;
+                }
+                binaryData.append(' ');
+            }
         }
 
         // Set color for encoding
@@ -86,4 +96,5 @@ public class ImageProcessor {
 
         scanner.close();
     }
+
 }
