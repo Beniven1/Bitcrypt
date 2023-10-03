@@ -36,7 +36,7 @@ public class ImageProcessor {
 
         String binaryData = "";
         // Binary data
-        if (encrypt == true) {
+        if (encrypt) {
             Scanner bitscan = new Scanner(System.in);
             System.out.print("What do you want to encrypt?");
             binaryData = bitscan.nextLine();
@@ -81,7 +81,7 @@ public class ImageProcessor {
                     }
                 }
             }
-            System.out.println("(NOT TRUE)Decrypted message: " + decryptedMessage.toString());
+            System.out.println("(NOT TRUE)Decrypted message: " + decryptedMessage);
         }
 
         scanner.close();
