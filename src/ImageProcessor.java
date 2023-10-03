@@ -28,7 +28,7 @@ public class ImageProcessor {
 
         // Ask for encryption or decryption
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Do you want to encrypt or !decrypt(not working)? (e/d): ");
+        System.out.print("Do you want to encrypt or decrypt(not working)? (e/d): ");
         String choice = scanner.nextLine();
 
         // Encrypt or decrypt
