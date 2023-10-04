@@ -91,6 +91,9 @@ public class ImageProcessor {
         }
 
         StringBuilder binaryValue = new StringBuilder();
+        StringBuilder binaryGroup = new StringBuilder();
+        String binaryString = binaryGroup.toString();
+        StringBuilder binaryInfo = new StringBuilder();
         // Save or print
         if (encrypt) {
             try {
@@ -107,28 +110,46 @@ public class ImageProcessor {
                 BufferedImage image1 = ImageIO.read(new File("binary.png"));
 
                 // Traverse each pixel of the image
-                StringBuilder binaryInfo = new StringBuilder();
-                for (int y = 0; y < image1.getHeight(); y++) {
-                    for (int x = 0; x < image1.getWidth(); x++) {
-                        Color color = new Color(image1.getRGB(x, y));
-                        if (color.equals(color00)) {
-                            binaryInfo.append("00");
-                        } else if (color.equals(color11)) {
-                            binaryInfo.append("11");
-                        } else if (color.equals(color01)) {
-                            binaryInfo.append("01");
-                        } else if (color.equals(color10)) {
-                            binaryInfo.append("10");
+                for (int y = 0; y < image1.getHeight(); y += gridSize) {
+                    for (int x = 0; x < image1.getWidth(); x += gridSize) {
+
+                        // Read the pixel values in the square
+                        for (int i = 0; i < gridSize; i++) {
+                            for (int j = 0; j < gridSize; j++) {
+                                Color color = new Color(image1.getRGB(x + i, y + j));
+                                if (color.equals(color00)) {
+                                    binaryValue.append("00");
+                                } else if (color.equals(color11)) {
+                                    binaryValue.append("11");
+                                } else if (color.equals(color01)) {
+                                    binaryValue.append("01");
+                                } else if (color.equals(color10)) {
+                                    binaryValue.append("10");
+                                }
+                            }
                         }
                     }
                 }
+                // Convert binaryValue to groups of 8 digits
+                binaryGroup.append(binaryValue);
+                while (binaryGroup.length() >= 8) {
+                    String binaryByte = binaryGroup.substring(0, 8);
+                    binaryGroup.delete(0, 8);
+                    int decimalValue = Integer.parseInt(binaryByte, 2);
+                    binaryInfo.append((char) decimalValue);
+                }
 
-                // Split the binary data into groups of 8
-                String binaryString = binaryInfo.toString();
-                binaryString = binaryString.replaceAll("(.{8})", "$1 ");
+                for (char p : binaryString.toCharArray()) {
+                    int val = p;
+                    for (int i = 0; i < 8; i++) {
+                        binaryInfo.append((val & 128) == 0 ? 0 : 1);
+                        val <<= 1;
+                    }
+                    binaryInfo.append(' ');
+                }
 
-                // Print the original binary data
-                System.out.println("Decoded binary data: " + binaryString);
+                // Print the decrypted message as ASCII
+                System.out.println("Decrypted message: " + binaryInfo.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
